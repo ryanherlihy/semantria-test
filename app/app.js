@@ -15,9 +15,10 @@ class App extends Component {
     super();
 
     this.state = {
-      documentInfo: ''
+      documentInfo: []
     }
     this.handleTextButton = this.handleTextButton.bind(this);
+    this.analysisBreakdown = this.analysisBreakdown.bind(this);
   }
 
   handleTextButton() {
@@ -39,7 +40,7 @@ class App extends Component {
       (val) => {
         console.log(val[0]);
         let received = "Document " + val[0]["id"] + " Sentiment score: " + val[0]["sentiment_score"] + "\r\n";
-        this.setState({documentInfo: received});
+        this.analysisBreakdown(val[0]);
         console.log("Document ", val[0]["id"], " Sentiment score: ", val[0]["sentiment_score"], "\r\n");
       }
     ).catch(
@@ -50,10 +51,20 @@ class App extends Component {
   }
 
   analysisBreakdown(analysis) {
+    let entities = analysis.entities.map((item, index) => {
+      return ['Title: ' + item.title, 'Label: ' + item.label, 'Sentiment Polarity: ' + item.sentiment_polarity];
+    });
 
+    this.setState({documentInfo: entities})
   }
 
   render() {
+    let analysisContent = this.state.documentInfo.map((item) => {
+      return item.map((element) => {
+        return <p key={100 * Math.random()}>{element}</p>;
+      });
+    });
+
     return (
       <div className='content'>
         <div className='container'>
@@ -79,7 +90,7 @@ class App extends Component {
               <div className='panel panel-default'>
                 <div className='panel-heading lead'>Analysis</div>
                 <div className='panel-body'>
-                  <p>{this.state.documentInfo}</p>
+                  <p>{analysisContent}</p>
                 </div>
               </div>
             </div>
