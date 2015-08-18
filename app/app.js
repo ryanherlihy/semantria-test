@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-let session = new Semantria.Session('fcf586fe-db8e-44f6-b15a-80132c4045ad','86c82e06-c537-41ef-90c7-6f9f6a60157d');
+let session = new Semantria.Session('','');
 
 window.session = session;
 
@@ -47,6 +47,10 @@ class App extends Component {
         console.log(reason);
       }
     );
+  }
+
+  analysisBreakdown(analysis) {
+
   }
 
   render() {
