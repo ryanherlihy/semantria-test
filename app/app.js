@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-let session = new Semantria.Session('','');
+let session = new Semantria.Session('fcf586fe-db8e-44f6-b15a-80132c4045ad','86c82e06-c537-41ef-90c7-6f9f6a60157d');
 
 window.session = session;
 
@@ -47,21 +47,38 @@ class App extends Component {
         console.log(reason);
       }
     );
-
   }
 
   render() {
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-md-6 col-md-offset-3'>
-            <textarea className='center-block form-control' ref='text'></textarea>
-            <button className='btn btn-primary' onClick={this.handleTextButton}>Press</button>
+      <div className='content'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-md-6 col-md-offset-3'>
+              <div className='panel panel-primary'>
+                <div className='panel-heading lead'>
+                  Enter Text to Analyze
+                </div>
+                <div className='panel-body'>
+                  <textarea className='center-block form-control' ref='text'></textarea>
+                  <button
+                    className='btn btn-primary center-block content'
+                    onClick={this.handleTextButton}>
+                    Send For Analysis
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className='row'>
-          <div className='col-md-6 col-md-offset-3'>
-            <p>{this.state.documentInfo}</p>
+          <div className='row'>
+            <div className='col-md-6 col-md-offset-3'>
+              <div className='panel panel-default'>
+                <div className='panel-heading lead'>Analysis</div>
+                <div className='panel-body'>
+                  <p>{this.state.documentInfo}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

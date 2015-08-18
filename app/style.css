@@ -1,3 +1,7 @@
 textarea {
+  height: 20%;
+}
+
+.content {
   margin-top: 20px;
 }
