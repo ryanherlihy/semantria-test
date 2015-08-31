@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-let session = new Semantria.Session('','');
+let session = new Semantria.Session('fcf586fe-db8e-44f6-b15a-80132c4045ad','86c82e06-c537-41ef-90c7-6f9f6a60157d');
 
 window.session = session;
 
@@ -39,9 +39,7 @@ class App extends Component {
     p.then(
       (val) => {
         console.log(val[0]);
-        let received = "Document " + val[0]["id"] + " Sentiment score: " + val[0]["sentiment_score"] + "\r\n";
         this.analysisBreakdown(val[0]);
-        console.log("Document ", val[0]["id"], " Sentiment score: ", val[0]["sentiment_score"], "\r\n");
       }
     ).catch(
       (reason) => {
@@ -51,46 +49,71 @@ class App extends Component {
   }
 
   analysisBreakdown(analysis) {
-    let entities = analysis.entities.map((item, index) => {
-      return ['Title: ' + item.title, 'Label: ' + item.label, 'Sentiment Polarity: ' + item.sentiment_polarity];
-    });
-
-    this.setState({documentInfo: entities})
+    if (analysis) {
+      this.setState({documentInfo: analysis})
+    }
   }
 
   render() {
-    let analysisContent = this.state.documentInfo.map((item) => {
-      return item.map((element) => {
-        return <p key={100 * Math.random()}>{element}</p>;
-      });
+    let analysisContent = Object.keys(this.state.documentInfo).map((output, index) => {
+      if (typeof this.state.documentInfo[output] === 'string') {
+        return (
+          <p key={index}>{output}: {this.state.documentInfo[output]}</p>
+        );
+      } else if (typeof this.state.documentInfo[output] === 'number') {
+        return (
+          <p key={index}>{output}: {this.state.documentInfo[output]}</p>
+        );
+      } else {
+        if (this.state.documentInfo[output]) {
+          let items = this.state.documentInfo[output].map((item) => {
+            return item['title'];
+          }).reduce((prev, current) => {
+            return prev + ', ' + current;
+          });
+          return(
+            <p key={index}>{output}: {items}</p>
+          );
+        }
+      }
     });
 
     return (
-      <div className='content'>
-        <div className='container'>
-          <div className='row'>
-            <div className='col-md-6 col-md-offset-3'>
-              <div className='panel panel-primary'>
-                <div className='panel-heading lead'>
-                  Enter Text to Analyze
-                </div>
-                <div className='panel-body'>
-                  <textarea className='center-block form-control' ref='text'></textarea>
-                  <button
-                    className='btn btn-primary center-block content'
-                    onClick={this.handleTextButton}>
-                    Send For Analysis
-                  </button>
+      <div>
+        <div className='navbar navbar-default'>
+          <div className='container'>
+          </div>
+        </div>
+        <div className='content'>
+          <div className='container'>
+            <div className='row'>
+              <div className='col-md-6 col-md-offset-3'>
+                <div className='panel panel-primary'>
+                  <div className='panel-heading lead'>
+                    Enter Text to Analyze
+                  </div>
+                  <div className='panel-body'>
+                    <textarea
+                      className='center-block form-control'
+                      ref='text'
+                      style={{height: 150}}>
+                    </textarea>
+                    <button
+                      className='btn btn-primary center-block content'
+                      onClick={this.handleTextButton}>
+                      Send For Analysis
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className='row'>
-            <div className='col-md-6 col-md-offset-3'>
-              <div className='panel panel-default'>
-                <div className='panel-heading lead'>Analysis</div>
-                <div className='panel-body'>
-                  <p>{analysisContent}</p>
+            <div className='row'>
+              <div className='col-md-6 col-md-offset-3'>
+                <div className='panel panel-default'>
+                  <div className='panel-heading lead'>Analysis</div>
+                  <div className='panel-body'>
+                    <p>{analysisContent}</p>
+                  </div>
                 </div>
               </div>
             </div>
