@@ -58,11 +58,17 @@ class App extends Component {
     let analysisContent = Object.keys(this.state.documentInfo).map((output, index) => {
       if (typeof this.state.documentInfo[output] === 'string') {
         return (
-          <p key={index}>{output}: {this.state.documentInfo[output]}</p>
+          <div key={index} style={{marginBottom: 20}}>
+            <h4>{output.replace('_', ' ').toUpperCase()}</h4>
+            <p>{this.state.documentInfo[output]}</p>
+          </div>
         );
       } else if (typeof this.state.documentInfo[output] === 'number') {
         return (
-          <p key={index}>{output}: {this.state.documentInfo[output]}</p>
+          <div key={index} style={{marginBottom: 20}}>
+            <h4>{output.replace('_', ' ').toUpperCase()}</h4>
+            <p>{this.state.documentInfo[output]}</p>
+          </div>
         );
       } else {
         if (this.state.documentInfo[output]) {
@@ -72,7 +78,10 @@ class App extends Component {
             return prev + ', ' + current;
           });
           return(
-            <p key={index}>{output}: {items}</p>
+            <div key={index} style={{marginBottom: 20}}>
+              <h4>{output.replace('_', ' ').toUpperCase()}</h4>
+              <p>{items}</p>
+            </div>
           );
         }
       }
