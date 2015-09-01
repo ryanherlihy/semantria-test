@@ -2,8 +2,9 @@
 
 import React from 'react';
 
+let session = new Semantria.Session('fcf586fe-db8e-44f6-b15a-80132c4045ad','86c82e06-c537-41ef-90c7-6f9f6a60157d');
 
-let session = new Semantria.Session('KEY','SECRET');
+// let session = new Semantria.Session('KEY','SECRET');
 
 window.session = session;
 
@@ -16,7 +17,7 @@ class App extends Component {
     super();
 
     this.state = {
-      documentInfo: []
+      documentInfo: {}
     }
     this.handleTextButton = this.handleTextButton.bind(this);
     this.analysisBreakdown = this.analysisBreakdown.bind(this);
@@ -33,20 +34,12 @@ class App extends Component {
       console.log("\"", doc["id"], "\" document queued successfully.", "\r\n");
     }
 
-    let p = new Promise((resolve, reject) => {
-      resolve(session.getProcessedDocuments());
-    });
+    let timeout = setInterval(() => {
+      let processed = session.getProcessedDocuments();
 
-    p.then(
-      (val) => {
-        console.log(val[0]);
-        this.analysisBreakdown(val[0]);
-      }
-    ).catch(
-      (reason) => {
-        console.log(reason);
-      }
-    );
+      clearInterval(timeout);
+      this.analysisBreakdown(processed[0]);
+    }, 3000);
   }
 
   analysisBreakdown(analysis) {
@@ -56,7 +49,7 @@ class App extends Component {
   }
 
   render() {
-    let analysisContent = Object.keys(this.state.documentInfo).map((output, index) => {
+    let analysisContent = Object.keys(this.state.documentInfo).sort().map((output, index) => {
       if (typeof this.state.documentInfo[output] === 'string') {
         return (
           <div key={index} style={{marginBottom: 20}}>
@@ -87,6 +80,27 @@ class App extends Component {
         }
       }
     });
+
+    let sentimentColor = {
+      red: 255,
+      green: 255,
+      blue: 255
+    };
+
+    let score = this.state.documentInfo['sentiment_score'];
+
+    if (score > 0) {
+      sentimentColor['red'] -= Math.ceil(score * 90);
+      sentimentColor['blue'] -= Math.ceil(score * 90);
+    } else if (score < 0) {
+      score = Math.abs(score);
+      sentimentColor['green'] -= Math.ceil(score * 90);
+      sentimentColor['blue'] -= Math.ceil(score * 90);
+    };
+
+    let sentimentStyle = {
+      backgroundColor: '#' + sentimentColor['red'].toString(16) + sentimentColor['green'].toString(16) + sentimentColor['blue'].toString(16)
+    };
 
     return (
       <div>
@@ -119,7 +133,7 @@ class App extends Component {
             </div>
             <div className='row'>
               <div className='col-md-6 col-md-offset-3'>
-                <div className='panel panel-default'>
+                <div className='panel panel-default' style={sentimentStyle}>
                   <div className='panel-heading lead'>Analysis</div>
                   <div className='panel-body'>
                     <p>{analysisContent}</p>
